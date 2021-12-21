@@ -1,0 +1,14 @@
+# Vars
+# Elastic Search Vars
+es_centos_rpm: elasticsearch.repo
+remote_user: ublanon
+
+# MYSQL
+mysql_root_password: password123
+app_user: ublanon
+http_host: ublanon
+http_conf: ublanon.conf
+http_port: 80
+disable_default: true
+
+src: prometheus.service

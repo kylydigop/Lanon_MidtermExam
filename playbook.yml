@@ -1,0 +1,206 @@
+---
+- name: HOA_4.1
+  hosts: elasticsearch
+  tags: elasticsearch,ubuntu
+  tasks:
+    - name: Include variables
+      include_vars:
+        file: config.yml
+
+    - name: Install Elasticsearch dependency (ubuntu)
+      include_role:
+        name: installubuntupkg
+      vars:
+        package: openjdk-8-jdk
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install Nginx (ubuntu)
+      include_role:
+        name: installubuntupkg
+      vars:
+        package: nginx
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Stopping Apache2 (ubuntu)
+      service:
+        name: apache2
+        state: stopped
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install apt-transport-https
+      include_role:
+        name: installubuntupkg
+      vars:
+        package: apt-transport-https
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Configure Elasticsearch (Ubuntu)
+      include_role:
+        name: configubuntues
+      when: ansible_facts['distribution'] == 'Ubuntu'
+      
+- name: HOA_4.1
+  hosts: elasticsearch
+  tags: elasticsearch,centos
+  tasks:
+    - name: Include variables
+      include_vars:
+        file: config.yml
+
+    - name: Install Java [Elastic search dependency] (CentOS)
+      include_role:
+        name: installcentospkg
+      vars:
+        package: java-1.8.0-openjdk
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Configuring Elastic Search (CentOS)
+      include_role:
+        name: configcentoses
+      when: ansible_facts['distribution'] == 'CentOS'
+
+- name: Install and Configure Kibana
+  hosts: kibana
+  tags: kibana,ubuntu
+  tasks:
+    - name: Include vars
+      include_vars:
+        file: config.yml
+
+    - name: Install Kibana (Ubuntu)
+      include_role:
+        name: installubuntupkg
+      vars:
+        package: kibana
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Configure Kibana (Ubuntu)
+      include_role:
+        name: configubuntukibana
+      when: ansible_facts['distribution'] == 'Ubuntu'
+      
+- name: Install and Configure Kibana
+  hosts: kibana
+  tags: kibana,centos
+  tasks:
+    - name: Include vars
+      include_vars:
+        file: config.yml
+
+    - name: Install Kibana (CentOS)
+      include_role:
+        name: installcentospkg
+      vars:
+        package: kibana
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Configure Kibana (CentOS)
+      include_role:
+        name: configcentoskibana
+      when: ansible_facts['distribution'] == 'CentOS'
+
+
+- name: Install and Configure Logstash
+  hosts: logstash
+  tags: logstash,ubuntu
+  tasks:
+    - name: Include vars
+      include_vars:
+        file: config.yml
+
+    - name: Install Logstash (Ubuntu)
+      include_role:
+        name: installubuntupkg
+      vars:
+        package: logstash
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Configure Logstash (Ubuntu)
+      include_role:
+        name: configubuntulogstash
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+- name: Install and Configure Logstash
+  hosts: logstash
+  tags: logstash,centos
+  tasks:
+    - name: Include vars
+      include_vars:
+        file: config.yml
+
+    - name: Install logstash (CentOS)
+      include_role:
+        name: installcentospkg
+      vars:
+        package: logstash
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Configure logstash (CentOS)
+      include_role:
+        name: configcentoslogstash
+      when: ansible_facts['distribution'] == 'CentOS'
+      
+- name: Install and Configure LAMP Stack
+  hosts: lamp
+  tags: lamp,ubuntu
+  tasks:
+    - name: Include vars
+      include_vars:
+        file: config.yml
+
+    - name: Install LAMP Packages (Ubuntu)
+      include_role:
+        name: installubuntupkg
+      vars:
+        package:
+          - apache2
+          - mysql-server
+          - python3-pymysql
+          - php
+          - php-mysql
+          - libapache2-mod-php
+      when: ansible_facts['distribution'] == 'Ubuntu'
+      
+    - name: Configure LAMP Packages (Ubuntu)
+      include_role:
+        name: configubuntulamp
+      when: ansible_facts['distribution'] == 'Ubuntu'
+      
+- name: Install and Configure Prometheus
+  hosts: prom
+  tags: prom,ubuntu
+  tasks:
+    - name: Include vars
+      include_vars:
+        file: config.yml
+        
+    - name: Disabling Apache2
+      service:
+        name: apache2
+        state: stopped
+        
+    - name: Install and Configure Prometheus (Ubuntu)
+      include_role:
+        name: configubuntuprom
+      when: ansible_facts['distribution'] == 'Ubuntu'
+      
+- name: Install and Configure Prometheus
+  hosts: prom
+  tags: prom,centos
+  tasks:
+    - name: Include vars
+      include_vars:
+        file: config.yml
+        
+    - name: Disabling Apache2
+      service:
+        name: apache2
+        state: stopped
+        
+    - name: Install and Configure Prometheus (CentOS)
+      include_role:
+        name: configubuntuprom
+      when: ansible_facts['distribution'] == 'CentOS'
+
+
+

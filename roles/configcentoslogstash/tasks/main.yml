@@ -1,0 +1,6 @@
+---
+- name: Start and Enable logstash (CentOS)
+  service:
+    name: logstash
+    state: started
+    enabled: yes
